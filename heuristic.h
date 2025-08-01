@@ -20,7 +20,8 @@ void SPBMaxSAT::init(vector<int> &init_solution)
                     if (org_clause_weight[c] == top_clause_weight)
                         clause_weight[c] = 1;
                     else
-                        clause_weight[c] = 0;
+                        // clause_weight[c] = 0;
+                        clause_weight[c] = 0.01;
                 }
             }
             else
