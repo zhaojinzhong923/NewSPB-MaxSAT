@@ -22,8 +22,8 @@ void SPBMaxSAT::init(vector<int> &init_solution)
                     else
                         // clause_weight[c] = 0;
                         // clause_weight[c] = 0.01;
-                        if(tries > 100000000/2){
-                            clause_weight[c] = 1;
+                        if(tries > 60000000){
+                            clause_weight[c] = 0.1;
                         }
                 }
             }
