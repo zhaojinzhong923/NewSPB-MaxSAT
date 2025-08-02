@@ -261,7 +261,14 @@ void SPBMaxSAT::local_search_with_decimation(char *inputfile)
     for (tries = 1; tries < max_tries; ++tries)
     {
         deci.init(local_opt_soln, best_soln, unit_clause, unit_clause_count, clause_lit_count);
-        deci.unit_prosess();
+        if(local_soln_feasible == 0 && best_soln_feasible == 0)
+        {
+            deci.unit_prosess();
+        }
+        else
+        {
+            deci.unit_prosess_2();
+        }
         init(deci.fix);
 
         long long local_opt = __LONG_LONG_MAX__;

@@ -20,6 +20,7 @@ class Decimation
     void sunit_propagation();
     void random_propagation();
     void unit_prosess();
+    void unit_prosess_2();
     bool choose_sense(int v);
 
     vector<int> fix;
@@ -404,6 +405,26 @@ void Decimation::unit_prosess()
         else if (sunit_beg_pointer != sunit_end_pointer)
         {
             sunit_propagation();
+        }
+        else
+        {
+            random_propagation();
+        }
+    }
+}
+
+void Decimation::unit_prosess_2()
+{
+
+    while (unassigned_var_count > 0)
+    {
+        if (sunit_beg_pointer != sunit_end_pointer)
+        {
+            sunit_propagation();
+        }
+        else if (hunit_beg_pointer != hunit_end_pointer)
+        {
+            hunit_propagation();
         }
         else
         {
