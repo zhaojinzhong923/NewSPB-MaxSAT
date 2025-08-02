@@ -20,11 +20,8 @@ void SPBMaxSAT::init(vector<int> &init_solution)
                     if (org_clause_weight[c] == top_clause_weight)
                         clause_weight[c] = 1;
                     else
-                        // clause_weight[c] = 0;
-                        // clause_weight[c] = 0.01;
-                        if(tries > 60000000){
-                            clause_weight[c] = 0.1;
-                        }
+                        clause_weight[c] = 0;
+                        // clause_weight[c] = 0.1;
                 }
             }
             else
@@ -72,7 +69,8 @@ void SPBMaxSAT::init(vector<int> &init_solution)
             {
                 if ((0 == local_soln_feasible || 0 == best_soln_feasible) && num_hclauses > 0)
                 {
-                    clause_weight[c] = 1;
+                    // clause_weight[c] = 1;
+                    clause_weight[c] = 0.1;
                 }
                 else
                 {
