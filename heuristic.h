@@ -29,7 +29,7 @@ void SPBMaxSAT::init(vector<int> &init_solution)
                         if(best_soln_feasible == 1 && local_soln_feasible == 0){
                             clause_weight[c] = 0.1;
                         }else{
-                            clause_weight[c] = 1;
+                            clause_weight[c] = 0;
                         }
                         
                 }
@@ -88,7 +88,7 @@ void SPBMaxSAT::init(vector<int> &init_solution)
                     if(best_soln_feasible == 1 && local_soln_feasible == 0){
                             clause_weight[c] = 0.1;
                         }else{
-                            clause_weight[c] = 1;
+                            clause_weight[c] = 0;
                         }
                 }
                 else
