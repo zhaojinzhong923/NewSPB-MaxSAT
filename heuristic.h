@@ -21,7 +21,12 @@ void SPBMaxSAT::init(vector<int> &init_solution)
                         clause_weight[c] = 1;
                     else
                         // clause_weight[c] = 0;
-                        if(local_soln_feasible == 1){
+                        // if(local_soln_feasible == 1){
+                        //     clause_weight[c] = 0.1;
+                        // }else{
+                        //     clause_weight[c] = 1;
+                        // }
+                        if(best_soln_feasible == 1 && local_soln_feasible == 0){
                             clause_weight[c] = 0.1;
                         }else{
                             clause_weight[c] = 1;
@@ -75,11 +80,16 @@ void SPBMaxSAT::init(vector<int> &init_solution)
                 if ((0 == local_soln_feasible || 0 == best_soln_feasible) && num_hclauses > 0)
                 {
                     // clause_weight[c] = 1;
-                    if(local_soln_feasible == 1){
+                    // if(local_soln_feasible == 1){
+                    //         clause_weight[c] = 0.1;
+                    // }else{
+                    //     clause_weight[c] = 1;
+                    // }
+                    if(best_soln_feasible == 1 && local_soln_feasible == 0){
                             clause_weight[c] = 0.1;
-                    }else{
-                        clause_weight[c] = 1;
-                    }
+                        }else{
+                            clause_weight[c] = 1;
+                        }
                 }
                 else
                 {
@@ -268,14 +278,15 @@ void SPBMaxSAT::local_search_with_decimation(char *inputfile)
     for (tries = 1; tries < max_tries; ++tries)
     {
         deci.init(local_opt_soln, best_soln, unit_clause, unit_clause_count, clause_lit_count);
-        if(local_soln_feasible == 0 && best_soln_feasible == 0)
-        {
-            deci.unit_prosess();
-        }
-        else
-        {
-            deci.unit_prosess_2();
-        }
+        // if(local_soln_feasible == 0 && best_soln_feasible == 0)
+        // {
+        //     deci.unit_prosess();
+        // }
+        // else
+        // {
+        //     deci.unit_prosess_2();
+        // }
+        deci.unit_prosess();
         init(deci.fix);
 
         long long local_opt = __LONG_LONG_MAX__;
