@@ -412,4 +412,24 @@ void Decimation::unit_prosess()
     }
 }
 
+void Decimation::unit_prosess_2()
+{
+
+    while (unassigned_var_count > 0)
+    {
+        if (hunit_beg_pointer != hunit_end_pointer)
+        {
+            hunit_propagation();
+        }
+        else if (sunit_beg_pointer != sunit_end_pointer)
+        {
+            sunit_propagation();
+        }
+        else
+        {
+            random_propagation();
+        }
+    }
+}
+
 #endif
