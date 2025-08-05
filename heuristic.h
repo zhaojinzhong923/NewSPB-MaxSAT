@@ -319,7 +319,12 @@ void SPBMaxSAT::hard_increase_weights(){
     {
         c = hardunsat_stack[i];
         
-        clause_weight[c] += h_inc;
+        // clause_weight[c] += h_inc;
+        if(best_soln_feasible == 1 && local_soln_feasible == 0){
+            clause_weight[c] += h_inc * 1.1;
+        }else{
+            clause_weight[c] += h_inc;
+        }
 
         if (clause_weight[c] == (h_inc + 1))
             large_weight_clauses[large_weight_clauses_count++] = c;
