@@ -314,17 +314,19 @@ void SPBMaxSAT::local_search_with_decimation(char *inputfile)
 }
 
 void SPBMaxSAT::hard_increase_weights(){
-    int i, c, v;
+    int i, c, v, temp;
+    temp = h_inc;
+    if(hard_unsat_nb > 0 && local_soln_feasible == 1){
+            h_inc = h_inc * ( 1 + hard_unsat_nb / num_hclauses);
+    }
     for (i = 0; i < hardunsat_stack_fill_pointer; ++i)
     {
         c = hardunsat_stack[i];
         
         // clause_weight[c] += h_inc;
-        if(best_soln_feasible == 1 && local_soln_feasible == 0){
-            clause_weight[c] += h_inc * 1.1;
-        }else{
-            clause_weight[c] += h_inc;
-        }
+        // if(best_soln_feasible == 1 && local_soln_feasible == 0){
+        
+        clause_weight[c] += h_inc;
 
         if (clause_weight[c] == (h_inc + 1))
             large_weight_clauses[large_weight_clauses_count++] = c;
@@ -339,6 +341,7 @@ void SPBMaxSAT::hard_increase_weights(){
             }
         }
     }
+    h_inc = temp;
     return;
 }
 
