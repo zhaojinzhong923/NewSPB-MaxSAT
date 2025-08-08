@@ -55,7 +55,7 @@ class SPBMaxSAT
 	int num_sclauses;
 
 	//steps and time
-	int tries;
+	// int tries;
 	int max_tries;
 	unsigned int max_flips;
 	unsigned int max_non_improve_flip;
@@ -199,6 +199,8 @@ class SPBMaxSAT
 	void free_memory();
 	bool verify_sol();
 	bool parse_parameters2(int argc, char **argv);
+
+	int tries;
 };
 
 #endif
