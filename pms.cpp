@@ -36,6 +36,8 @@ int main(int argc, char *argv[])
 	
 	s.local_search_with_decimation(argv[1]);
 
+	cout << "tries: " << s.tries << " steps: " << total_step << endl;
+
 	// s.simple_print(argv[1]);
 
 	// s.free_memory();
