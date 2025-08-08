@@ -26,7 +26,7 @@ void SPBMaxSAT::init(vector<int> &init_solution)
                         // }else{
                         //     clause_weight[c] = 1;
                         // }
-                        if(best_soln_feasible == 1 && local_soln_feasible == 0){
+                        if(best_soln_feasible == 1 && local_soln_feasible == 0 && tries > 5){
                             clause_weight[c] = 0.1 * tuned_org_clause_weight[c];
                         }else{
                             clause_weight[c] = 0;
@@ -85,7 +85,7 @@ void SPBMaxSAT::init(vector<int> &init_solution)
                     // }else{
                     //     clause_weight[c] = 1;
                     // }
-                    if(best_soln_feasible == 1 && local_soln_feasible == 0){
+                    if(best_soln_feasible == 1 && local_soln_feasible == 0 && tries > 5){
                             // clause_weight[c] = 0.1 * tuned_org_clause_weight[c];
                             clause_weight[c] = 0.1 ;
                         }else{
