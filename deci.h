@@ -59,6 +59,10 @@ class Decimation
 
     int *clause_delete;
     int *clause_lit_count;
+
+    int *initial_value;
+    bool have_sol;
+    bool first_unit;
 };
 
 Decimation::Decimation(lit **ls_var_lit, int *ls_var_lit_count, lit **ls_clause_lit, long long *ls_org_clause_weight, long long ls_top_clause_weight)
@@ -99,6 +103,13 @@ void Decimation::make_space(int max_c, int max_v)
 
     clause_delete = new int[max_c];
     clause_lit_count = new int[max_c];
+
+    initial_value = new int[max_v];
+
+    for(int i = 0 ; i < max_v ; i ++)
+    {
+        initial_value[i] = 0;
+    }
 }
 
 void Decimation::free_memory()
@@ -122,6 +133,8 @@ void Decimation::free_memory()
 
     delete[] clause_delete;
     delete[] clause_lit_count;
+
+    delete[] initial_value;
 }
 
 void Decimation::init(int *ls_local_opt, int *ls_global_opt, lit *ls_unit_clause, int ls_unit_clause_count, int *ls_clause_lit_count)
@@ -392,25 +405,25 @@ void Decimation::random_propagation()
     assign(v, sense);
 }
 
-void Decimation::unit_prosess()
-{
+// void Decimation::unit_prosess()
+// {
 
-    while (unassigned_var_count > 0)
-    {
-        if (hunit_beg_pointer != hunit_end_pointer)
-        {
-            hunit_propagation();
-        }
-        else if (sunit_beg_pointer != sunit_end_pointer)
-        {
-            sunit_propagation();
-        }
-        else
-        {
-            random_propagation();
-        }
-    }
-}
+//     while (unassigned_var_count > 0)
+//     {
+//         if (hunit_beg_pointer != hunit_end_pointer)
+//         {
+//             hunit_propagation();
+//         }
+//         else if (sunit_beg_pointer != sunit_end_pointer)
+//         {
+//             sunit_propagation();
+//         }
+//         else
+//         {
+//             random_propagation();
+//         }
+//     }
+// }
 
 void Decimation::unit_prosess_2()
 {
@@ -430,6 +443,54 @@ void Decimation::unit_prosess_2()
             random_propagation();
         }
     }
+}
+
+void Decimation::unit_prosess()
+{
+    if(first_unit)
+    {
+        while (unassigned_var_count > 0)
+        {
+            if (hunit_beg_pointer != hunit_end_pointer)
+            {
+                hunit_propagation();
+            }
+            else if (sunit_beg_pointer != sunit_end_pointer)
+            {
+                sunit_propagation();
+            }
+            else
+            {
+                random_propagation();
+            }
+        }
+        if(have_sol)
+        {
+            first_unit = false;
+        }
+    }
+    else
+    {
+        int sense;
+        for(int v = 0 ; v < num_vars ; v++)
+        {
+            if(initial_value[v] > 0)
+            {
+                sense = 0;
+            }
+            else if(initial_value[v] < 0)
+            {
+                sense = 1;
+            }
+            else
+            {
+                sense = choose_sense(v);
+            }
+            assign(v, sense);
+        }
+        first_unit = true;
+    }
+    
 }
 
 #endif
