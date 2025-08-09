@@ -283,29 +283,23 @@ void SPBMaxSAT::local_search_with_decimation(char *inputfile)
                     opt_unsat_weight = soft_unsat_weight;
 
                     deci.have_sol = true;
-                    for (int v = 1; v <= num_vars; ++v)
+                    for (int v = 1; v <= num_vars; ++v){
+
+                    
                         best_soln[v] = cur_soln[v];
-                    // if (opt_unsat_weight <= best_known || best_known == -1)
-                    // {
-                    //     cout << "c best solution found." << endl;
-                    //     if (opt_unsat_weight < best_known)
-                    //     {
-                    //         cout << "c a better solution " << opt_unsat_weight << endl;
-                    //     }
-                    //     return;
-                    // }
-                    if(cur_soln[v] == 1)
-                    {
-                        deci.initial_value[v] ++;
-                    }
-                    else if(cur_soln[v] == 0)
-                    {
-                        deci.initial_value[v] --;
-                    }
-                    else
-                    {
-                        cout<<"Assignment error"<<endl;
-                        exit(0);
+                        if(cur_soln[v] == 1)
+                        {
+                            deci.initial_value[v] ++;
+                        }
+                        else if(cur_soln[v] == 0)
+                        {
+                            deci.initial_value[v] --;
+                        }
+                        else
+                        {
+                            cout<<"Assignment error"<<endl;
+                            exit(0);
+                        }
                     }
                 }
                 if (best_soln_feasible == 0)
