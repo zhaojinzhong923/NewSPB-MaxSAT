@@ -23,6 +23,7 @@ class Decimation
     bool choose_sense(int v);
 
     vector<int> fix;
+    vector<int> record_best_soln;
 
     int num_vars;
     int num_clauses;
@@ -95,6 +96,9 @@ void Decimation::make_space(int max_c, int max_v)
 
     fix.resize(max_v);
     fix.reserve(max_v);
+
+    record_best_soln.resize(max_v);
+    record_best_soln.reserve(max_v);
 
     hunit_clause_queue = new lit[max_v];
     sense_in_hunit_clause_queue = new int[max_v];
@@ -449,7 +453,55 @@ void Decimation::random_propagation()
 //     }
 // }
 
-void Decimation::unit_prosess(int *ls_global_opt)
+// void Decimation::unit_prosess(int *ls_global_opt)
+// {
+//     if(first_unit)
+//     {
+//         while (unassigned_var_count > 0)
+//         {
+//             if (hunit_beg_pointer != hunit_end_pointer)
+//             {
+//                 hunit_propagation();
+//             }
+//             else if (sunit_beg_pointer != sunit_end_pointer)
+//             {
+//                 sunit_propagation();
+//             }
+//             else
+//             {
+//                 random_propagation();
+//             }
+//         }
+//         if(have_sol)
+//         {
+//             first_unit = false;
+//         }
+//     }
+//     else
+//     {
+//         int sense;
+//         for(int v = 0 ; v < num_vars ; v++)
+//         {
+//             if(initial_value[v] > 1)
+//             {
+//                 sense = 1 - ls_global_opt[v];
+//             }
+//             else if(initial_value[v] <= 1)
+//             {
+//                 sense = ls_global_opt[v];
+//             }
+//             else
+//             {
+//                 sense = choose_sense(v);
+//             }
+//             assign(v, sense);
+//         }
+//         first_unit = true;
+//     }
+    
+// }
+
+void Decimation::unit_prosess(int exceed_best_time)
 {
     if(first_unit)
     {
@@ -478,9 +530,9 @@ void Decimation::unit_prosess(int *ls_global_opt)
         int sense;
         for(int v = 0 ; v < num_vars ; v++)
         {
-            if(initial_value[v] > 1)
+            if(record_best_soln[v] > exceed_best_time/2)
             {
-                sense = 1 - ls_global_opt[v];
+                sense = 1;
             }
             else if(initial_value[v] <= 1)
             {

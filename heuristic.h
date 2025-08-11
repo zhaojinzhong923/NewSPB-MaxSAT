@@ -260,9 +260,9 @@ void SPBMaxSAT::local_search_with_decimation(char *inputfile)
         // if(local_soln_feasible == 1){
         //     deci.unit_prosess_2();
         // }
-        deci.unit_prosess(best_soln);
+        // deci.unit_prosess(best_soln);
+        deci.unit_prosess(exceed_best_time);
         init(deci.fix);
-
         long long local_opt = __LONG_LONG_MAX__;
         max_flips = max_non_improve_flip;
         for (step = 1; step < max_flips; ++step)
@@ -283,12 +283,14 @@ void SPBMaxSAT::local_search_with_decimation(char *inputfile)
                     opt_unsat_weight = soft_unsat_weight;
 
                     deci.have_sol = true;
+                    exceed_best_time++;
                     for (int v = 1; v <= num_vars; ++v){
 
                     
-                        if(cur_soln[v] != best_soln[v]){
-                            deci.initial_value[v]++ ;
-                        }
+                        // if(cur_soln[v] != best_soln[v]){
+                        //     deci.initial_value[v]++ ;
+                        // }
+                        deci.record_best_soln[v] += cur_soln[v];
                         best_soln[v] = cur_soln[v];
                         // if(cur_soln[v] == 1)
                         // {

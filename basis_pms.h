@@ -137,6 +137,7 @@ class SPBMaxSAT
 	long long soft_unsat_weight;
 	long long opt_unsat_weight;
 	long long local_opt_unsat_weight;
+	int exceed_best_time;
 
 	//clause weighting
 	int *large_weight_clauses;
