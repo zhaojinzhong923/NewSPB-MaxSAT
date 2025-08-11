@@ -19,7 +19,7 @@ class Decimation
     void hunit_propagation();
     void sunit_propagation();
     void random_propagation();
-    void unit_prosess();
+    void unit_prosess(int *ls_global_opt);
     bool choose_sense(int v);
 
     vector<int> fix;
@@ -76,6 +76,10 @@ Decimation::Decimation(lit **ls_var_lit, int *ls_var_lit_count, lit **ls_clause_
 
 void Decimation::make_space(int max_c, int max_v)
 {
+
+    first_unit = true;
+    have_sol = false;
+
     num_vars = max_v;
     num_clauses = max_c;
 
@@ -445,7 +449,7 @@ void Decimation::random_propagation()
 //     }
 // }
 
-void Decimation::unit_prosess()
+void Decimation::unit_prosess(int *ls_global_opt)
 {
     if(first_unit)
     {
@@ -474,13 +478,13 @@ void Decimation::unit_prosess()
         int sense;
         for(int v = 0 ; v < num_vars ; v++)
         {
-            if(initial_value[v] > 0)
+            if(initial_value[v] > 1)
             {
-                sense = 0;
+                sense = 1 - ls_global_opt[v];
             }
-            else if(initial_value[v] < 0)
+            else if(initial_value[v] <= 1)
             {
-                sense = 1;
+                sense = ls_global_opt[v];
             }
             else
             {
