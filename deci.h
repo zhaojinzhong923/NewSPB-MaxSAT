@@ -19,10 +19,10 @@ class Decimation
     void hunit_propagation();
     void sunit_propagation();
     void random_propagation();
-    void unit_prosess(int *ls_global_opt, int *always_unsat_stack, int always_unsat_stack_fill_pointer, int *always_unsat_sc_flag);
+    void unit_prosess(int *ls_global_opt, int *always_unsat_stack, int always_unsat_stack_fill_pointer, int *always_unsat_sc_flag, int *index_in_always_unsat_stack);
     bool choose_sense(int v);
 
-    void random_propagation_2(int *always_unsat_stack, int always_unsat_stack_fill_pointer, int *always_unsat_sc_flag);
+    void random_propagation_2(int *always_unsat_stack, int always_unsat_stack_fill_pointer, int *always_unsat_sc_flag, int *index_in_always_unsat_stack);
 
     vector<int> fix;
 
@@ -411,7 +411,7 @@ void Decimation::random_propagation()
     assign(v, sense);
 }
 
-void Decimation::random_propagation_2(int *always_unsat_stack, int always_unsat_stack_fill_pointer, int *always_unsat_sc_flag)
+void Decimation::random_propagation_2(int *always_unsat_stack, int always_unsat_stack_fill_pointer, int *always_unsat_sc_flag, int *index_in_always_unsat_stack)
 {
     // 如果长期未满足子句集合不为空
     if (always_unsat_stack_fill_pointer > 0) 
@@ -422,7 +422,7 @@ void Decimation::random_propagation_2(int *always_unsat_stack, int always_unsat_
         // 遍历该子句，找到第一个未赋值的变量
         for (int i = 0; i < clause_lit_count[clause_idx]; i++) 
         {
-            int lit = clause_lit[clause_idx][i];
+            lit lit = clause_lit[clause_idx][i];
             int var = lit.var_num;
             if (fix[var] == -1) // 找到第一个未赋值变量
             {
@@ -487,7 +487,7 @@ void Decimation::random_propagation_2(int *always_unsat_stack, int always_unsat_
 //     }
 // }
 
-void Decimation::unit_prosess(int *ls_global_opt, int *always_unsat_stack, int always_unsat_stack_fill_pointer, int *always_unsat_sc_flag)
+void Decimation::unit_prosess(int *ls_global_opt, int *always_unsat_stack, int always_unsat_stack_fill_pointer, int *always_unsat_sc_flag, int *index_in_always_unsat_stack)
 {
     if(first_unit)
     {
@@ -507,7 +507,7 @@ void Decimation::unit_prosess(int *ls_global_opt, int *always_unsat_stack, int a
                 // random_propagation_2();
                 if (always_unsat_stack_fill_pointer > 0)
                 {
-                    random_propagation_2(always_unsat_stack, always_unsat_stack_fill_pointer, always_unsat_sc_flag);
+                    random_propagation_2(always_unsat_stack, always_unsat_stack_fill_pointer, always_unsat_sc_flag, index_in_always_unsat_stack);
                 }
                 else
                 {

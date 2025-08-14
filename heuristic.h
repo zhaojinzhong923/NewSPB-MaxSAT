@@ -267,7 +267,7 @@ void SPBMaxSAT::local_search_with_decimation(char *inputfile)
         //     deci.unit_prosess_2();
         // }
         
-        deci.unit_prosess(best_soln,always_unsat_stack, always_unsat_stack_fill_pointer, always_unsat_sc_flag);
+        deci.unit_prosess(best_soln,always_unsat_stack, always_unsat_stack_fill_pointer, always_unsat_sc_flag, index_in_always_unsat_stack);
         init(deci.fix);
 
         long long local_opt = __LONG_LONG_MAX__;
@@ -318,10 +318,10 @@ void SPBMaxSAT::local_search_with_decimation(char *inputfile)
                         // else if ((sat_count[c] > 0) && (always_unsat_sc_flag[c] == 1))
                         if ((sat_count[c] > 0) && (always_unsat_sc_flag[c] == 1)){
                             always_unsat_sc_flag[c] = 0;
-                            int index = index_in_always_unsat_stack[c];
-                            int last_c = mypop(always_unsat_stack);
-                            always_unsat_stack[index] = last_c;
-                            index_in_always_unsat_stack[last_c] = index;
+                                int index = index_in_always_unsat_stack[c];
+                                int last_c = mypop(always_unsat_stack);
+                                always_unsat_stack[index] = last_c;
+                                index_in_always_unsat_stack[last_c] = index;
                         }
                             
                     }
