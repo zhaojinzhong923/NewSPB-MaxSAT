@@ -22,7 +22,7 @@ class Decimation
     void unit_prosess(int *ls_global_opt, int *always_unsat_stack, int always_unsat_stack_fill_pointer, int *always_unsat_sc_flag);
     bool choose_sense(int v);
 
-    void random_propagation_2();
+    void random_propagation_2(int *always_unsat_stack, int always_unsat_stack_fill_pointer, int *always_unsat_sc_flag);
 
     vector<int> fix;
 
@@ -411,7 +411,7 @@ void Decimation::random_propagation()
     assign(v, sense);
 }
 
-void Decimation::random_propagation_2()
+void Decimation::random_propagation_2(int *always_unsat_stack, int always_unsat_stack_fill_pointer, int *always_unsat_sc_flag)
 {
     // 如果长期未满足子句集合不为空
     if (always_unsat_stack_fill_pointer > 0) 
@@ -507,7 +507,7 @@ void Decimation::unit_prosess(int *ls_global_opt, int *always_unsat_stack, int a
                 // random_propagation_2();
                 if (always_unsat_stack_fill_pointer > 0)
                 {
-                    random_propagation_2();
+                    random_propagation_2(always_unsat_stack, always_unsat_stack_fill_pointer, always_unsat_sc_flag);
                 }
                 else
                 {
