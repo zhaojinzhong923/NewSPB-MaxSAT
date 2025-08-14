@@ -7,6 +7,7 @@
 void SPBMaxSAT::init(vector<int> &init_solution)
 {
     soft_large_weight_clauses_count = 0;
+    always_unsat_stack_fill_pointer = 0;
 
     if (1 == problem_weighted) // weighted partial MaxSAT
     {
@@ -16,6 +17,11 @@ void SPBMaxSAT::init(vector<int> &init_solution)
             {
                 for (int c = 0; c < num_clauses; c++)
                 {
+
+                    always_unsat_sc_flag[c]++ ;
+                    index_in_always_unsat_stack[c] = always_unsat_stack_fill_pointer;
+                    always_unsat_stack[always_unsat_stack_fill_pointer++] = c;
+
                     already_in_soft_large_weight_stack[c] = 0;
                     if (org_clause_weight[c] == top_clause_weight)
                         clause_weight[c] = 1;
@@ -260,7 +266,8 @@ void SPBMaxSAT::local_search_with_decimation(char *inputfile)
         // if(local_soln_feasible == 1){
         //     deci.unit_prosess_2();
         // }
-        deci.unit_prosess(best_soln);
+        
+        deci.unit_prosess(best_soln,always_unsat_stack, always_unsat_stack_fill_pointer, always_unsat_sc_flag);
         init(deci.fix);
 
         long long local_opt = __LONG_LONG_MAX__;
@@ -303,6 +310,20 @@ void SPBMaxSAT::local_search_with_decimation(char *inputfile)
                         //     cout<<"Assignment error"<<endl;
                         //     exit(0);
                         // }
+                    }
+                    for (int c = 0; c < num_clauses; ++c) 
+                    {
+                        // if (org_clause_weight[c] == top_clause_weight) 
+                        //     continue;
+                        // else if ((sat_count[c] > 0) && (always_unsat_sc_flag[c] == 1))
+                        if ((sat_count[c] > 0) && (always_unsat_sc_flag[c] == 1)){
+                            always_unsat_sc_flag[c] = 0;
+                            int index = index_in_always_unsat_stack[c];
+                            int last_c = mypop(always_unsat_stack);
+                            always_unsat_stack[index] = last_c;
+                            index_in_always_unsat_stack[last_c] = index;
+                        }
+                            
                     }
                 }
                 if (best_soln_feasible == 0)

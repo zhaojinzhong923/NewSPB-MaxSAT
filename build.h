@@ -392,6 +392,9 @@ void SPBMaxSAT::build_instance(char *filename)
     // scan all clauses to build up var literal arrays
     for (c = 0; c < num_clauses; ++c)
     {
+        // if (org_clause_weight[c] != top_clause_weight)
+            always_unsat_sc_flag[c] = 1;
+
         for (int i = 0; i < clause_lit_count[c]; ++i)
         {
             v = clause_lit[c][i].var_num;
@@ -439,6 +442,8 @@ void SPBMaxSAT::allocate_memory()
     softunsat_stack = new int[malloc_clause_length];
     index_in_softunsat_stack = new int[malloc_clause_length];
 
+    always_unsat_stack = new int[malloc_clause_length];
+
     // soft_clause_weight_upper_bound = new long long[malloc_clause_length];
 
     unsatvar_stack = new int[malloc_var_length];
@@ -460,6 +465,8 @@ void SPBMaxSAT::allocate_memory()
     temp_lit = new int[malloc_var_length];
 
     soft_clause_num_index = new int[malloc_clause_length];
+
+    always_unsat_sc_flag = new int[malloc_clause_length];
 }
 
 void SPBMaxSAT::free_memory()
@@ -499,6 +506,9 @@ void SPBMaxSAT::free_memory()
     delete[] softunsat_stack;
     delete[] index_in_softunsat_stack;
 
+    delete[] always_unsat_stack;
+    delete[] index_in_always_unsat_stack;
+
     delete[] unsatvar_stack;
     delete[] index_in_unsatvar_stack;
     delete[] unsat_app_count;
@@ -519,6 +529,8 @@ void SPBMaxSAT::free_memory()
     delete[] temp_lit;
 
     delete[] soft_clause_num_index;
+
+    delete[] always_unsat_sc_flag;
 }
 
 #endif

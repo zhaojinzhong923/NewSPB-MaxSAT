@@ -116,6 +116,10 @@ class SPBMaxSAT
 	int *index_in_softunsat_stack; //which position is a clause in the unsat_stack
 	int softunsat_stack_fill_pointer;
 
+	int *always_unsat_stack;		   //
+	int *index_in_always_unsat_stack; //
+	int always_unsat_stack_fill_pointer;
+
 	//variables in unsat clauses
 	int *unsatvar_stack;
 	int unsatvar_stack_fill_pointer;
@@ -169,6 +173,8 @@ class SPBMaxSAT
 	float random_prob;
 	int coe_soft_clause_weight;
 	//long long *soft_clause_weight_upper_bound;
+
+	int *always_unsat_sc_flag;
 
 	//function used in algorithm
 	void build_neighbor_relation();

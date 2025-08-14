@@ -19,8 +19,10 @@ class Decimation
     void hunit_propagation();
     void sunit_propagation();
     void random_propagation();
-    void unit_prosess(int *ls_global_opt);
+    void unit_prosess(int *ls_global_opt, int *always_unsat_stack, int always_unsat_stack_fill_pointer, int *always_unsat_sc_flag);
     bool choose_sense(int v);
+
+    void random_propagation_2();
 
     vector<int> fix;
 
@@ -409,6 +411,42 @@ void Decimation::random_propagation()
     assign(v, sense);
 }
 
+void Decimation::random_propagation_2()
+{
+    // 如果长期未满足子句集合不为空
+    if (always_unsat_stack_fill_pointer > 0) 
+    {
+        // 随机选择一个未满足子句
+        int clause_idx = always_unsat_stack[rand() % always_unsat_stack_fill_pointer];
+
+        // 遍历该子句，找到第一个未赋值的变量
+        for (int i = 0; i < clause_lit_count[clause_idx]; i++) 
+        {
+            int lit = clause_lit[clause_idx][i];
+            int var = lit.var_num;
+            if (fix[var] == -1) // 找到第一个未赋值变量
+            {
+                int sense = lit.sense; 
+                assign(var, sense);
+                int index = index_in_always_unsat_stack[clause_idx];
+                int last_c = mypop(always_unsat_stack);
+                always_unsat_stack[index] = last_c;
+                index_in_always_unsat_stack[last_c] = index;
+                return; // 赋值完成后直接返回
+            }else // 如果该变量已经被赋值
+            {
+                // 可以选择继续遍历下一个变量，或者直接返回
+                continue; // 继续遍历下一个变量
+            }
+        }
+    }
+
+    // 如果没有找到合适变量，则退回到原始随机策略
+    int v = unassigned_var[rand() % unassigned_var_count];
+    int sense = rand() % 2;
+    assign(v, sense);
+}
+
 // void Decimation::unit_prosess()
 // {
 
@@ -449,7 +487,7 @@ void Decimation::random_propagation()
 //     }
 // }
 
-void Decimation::unit_prosess(int *ls_global_opt)
+void Decimation::unit_prosess(int *ls_global_opt, int *always_unsat_stack, int always_unsat_stack_fill_pointer, int *always_unsat_sc_flag)
 {
     if(first_unit)
     {
@@ -465,7 +503,16 @@ void Decimation::unit_prosess(int *ls_global_opt)
             }
             else
             {
-                random_propagation();
+                // random_propagation();
+                // random_propagation_2();
+                if (always_unsat_stack_fill_pointer > 0)
+                {
+                    random_propagation_2();
+                }
+                else
+                {
+                    random_propagation();
+                }
             }
         }
         if(have_sol)
