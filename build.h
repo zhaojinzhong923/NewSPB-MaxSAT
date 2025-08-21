@@ -392,7 +392,7 @@ void SPBMaxSAT::build_instance(char *filename)
     // scan all clauses to build up var literal arrays
     for (c = 0; c < num_clauses; ++c)
     {
-        always_unsat_sc_flag[c] = 0;
+        always_unsat_clause[c] = 0;
         for (int i = 0; i < clause_lit_count[c]; ++i)
         {
             v = clause_lit[c][i].var_num;
