@@ -355,7 +355,8 @@ void SPBMaxSAT::soft_increase_weights(){
         {
             c = soft_clause_num_index[i];
 
-            double inc = soft_increase_ratio * (clause_weight[c] + tuned_org_clause_weight[c] + always_unsat_clause[c]) - clause_weight[c];
+            // double inc = soft_increase_ratio * (clause_weight[c] + tuned_org_clause_weight[c] + always_unsat_clause[c]) - clause_weight[c];
+            double inc = soft_increase_ratio * (clause_weight[c] + tuned_org_clause_weight[c]) - clause_weight[c];
             //tuned_org_clause_weight[c] = (double)org_clause_weight[c] / avg_soft_weight;
 
             clause_weight[c] += inc;
@@ -392,8 +393,9 @@ void SPBMaxSAT::soft_increase_weights(){
         {
             c = soft_clause_num_index[i];
 
-            double inc = soft_increase_ratio * (clause_weight[c] + s_inc + always_unsat_clause[c]) - clause_weight[c];
-
+            // double inc = soft_increase_ratio * (clause_weight[c] + s_inc + always_unsat_clause[c]) - clause_weight[c];
+            double inc = soft_increase_ratio * (clause_weight[c] + s_inc) - clause_weight[c];
+            
             clause_weight[c] += inc;
 
             if (sat_count[c] <= 0) // unsat
