@@ -328,7 +328,7 @@ void SPBMaxSAT::hard_increase_weights(){
     {
         c = hardunsat_stack[i];
         
-        clause_weight[c] = clause_weight[c] + h_inc + always_unsat_clause[c];
+        clause_weight[c] = clause_weight[c] + h_inc + always_unsat_clause[c]*0.1;
 
         if (clause_weight[c] >= (h_inc + 1))
             large_weight_clauses[large_weight_clauses_count++] = c;
@@ -359,7 +359,8 @@ void SPBMaxSAT::soft_increase_weights(){
             double inc = soft_increase_ratio * (clause_weight[c] + tuned_org_clause_weight[c]) - clause_weight[c];
             //tuned_org_clause_weight[c] = (double)org_clause_weight[c] / avg_soft_weight;
 
-            clause_weight[c] += inc;
+            // clause_weight[c] += inc;
+            clause_weight[c] = inc + clause_weight[c] + always_unsat_clause[c]*0.1;
             if (sat_count[c] <= 0) // unsat
             {
                 for (lit *p = clause_lit[c]; (v = p->var_num) != 0; p++)
@@ -395,7 +396,7 @@ void SPBMaxSAT::soft_increase_weights(){
 
             // double inc = soft_increase_ratio * (clause_weight[c] + s_inc + always_unsat_clause[c]) - clause_weight[c];
             double inc = soft_increase_ratio * (clause_weight[c] + s_inc) - clause_weight[c];
-            
+
             clause_weight[c] += inc;
 
             if (sat_count[c] <= 0) // unsat
