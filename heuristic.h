@@ -333,7 +333,7 @@ void SPBMaxSAT::hard_increase_weights(){
         
         // clause_weight[c] = clause_weight[c] + h_inc + always_unsat_clause[c]*0.1;
         if(always_unsat_clause[c]>5){
-            clause_weight[c] = clause_weight[c] + h_inc + 1;
+            clause_weight[c] = clause_weight[c] + h_inc;
             always_unsat_clause[c]=0;
         }else{
             clause_weight[c] = clause_weight[c] + h_inc;
