@@ -16,11 +16,12 @@ void SPBMaxSAT::init(vector<int> &init_solution)
             {
                 for (int c = 0; c < num_clauses; c++)
                 {
-                    always_unsat_clause[c]++;
+                    // always_unsat_clause[c]++;
                     already_in_soft_large_weight_stack[c] = 0;
-                    if (org_clause_weight[c] == top_clause_weight)
+                    if (org_clause_weight[c] == top_clause_weight){
                         clause_weight[c] = 1;
-                    else
+                        always_unsat_clause[c]++;
+                    }else
                         clause_weight[c] = 0;
                 }
             }
@@ -28,11 +29,12 @@ void SPBMaxSAT::init(vector<int> &init_solution)
             {
                 for (int c = 0; c < num_clauses; c++)
                 {
-                    always_unsat_clause[c]++;
+                    // always_unsat_clause[c]++;
                     already_in_soft_large_weight_stack[c] = 0;
-                    if (org_clause_weight[c] == top_clause_weight)
+                    if (org_clause_weight[c] == top_clause_weight){
                         clause_weight[c] = 1;
-                    else
+                        always_unsat_clause[c]++;
+                    }else
                     {
                         clause_weight[c] = tuned_org_clause_weight[c];
                         if (clause_weight[c] > s_inc && already_in_soft_large_weight_stack[c] == 0)
@@ -62,12 +64,13 @@ void SPBMaxSAT::init(vector<int> &init_solution)
     {
         for (int c = 0; c < num_clauses; c++)
         {
-            always_unsat_clause[c]++;
+            // always_unsat_clause[c]++;
             already_in_soft_large_weight_stack[c] = 0;
 
-            if (org_clause_weight[c] == top_clause_weight)
+            if (org_clause_weight[c] == top_clause_weight){
                 clause_weight[c] = 1;
-            else
+                always_unsat_clause[c]++;
+            }else
             {
                 if ((0 == local_soln_feasible || 0 == best_soln_feasible) && num_hclauses > 0)
                 {
@@ -295,7 +298,7 @@ void SPBMaxSAT::local_search_with_decimation(char *inputfile)
 
                     for (int c = 0; c < num_clauses; ++c) 
                     {
-                        if ( sat_count[c] > 0 )
+                        if ( sat_count[c] > 0 && org_clause_weight[c] = top_clause_weight)
                             always_unsat_clause[c] = 0;
                     }
                 }
@@ -328,7 +331,13 @@ void SPBMaxSAT::hard_increase_weights(){
     {
         c = hardunsat_stack[i];
         
-        clause_weight[c] = clause_weight[c] + h_inc + always_unsat_clause[c]*0.1;
+        // clause_weight[c] = clause_weight[c] + h_inc + always_unsat_clause[c]*0.1;
+        if(always_unsat_clause[c]>5){
+            clause_weight[c] = clause_weight[c] + h_inc + 1;
+            always_unsat_clause[c]=0;
+        }else{
+            clause_weight[c] = clause_weight[c] + h_inc;
+        }
 
         if (clause_weight[c] >= (h_inc + 1))
             large_weight_clauses[large_weight_clauses_count++] = c;
@@ -359,8 +368,8 @@ void SPBMaxSAT::soft_increase_weights(){
             double inc = soft_increase_ratio * (clause_weight[c] + tuned_org_clause_weight[c]) - clause_weight[c];
             //tuned_org_clause_weight[c] = (double)org_clause_weight[c] / avg_soft_weight;
 
-            // clause_weight[c] += inc;
-            clause_weight[c] = inc + clause_weight[c] + always_unsat_clause[c]*0.1;
+            clause_weight[c] += inc;
+            // clause_weight[c] = inc + clause_weight[c] + always_unsat_clause[c]*0.1;
             if (sat_count[c] <= 0) // unsat
             {
                 for (lit *p = clause_lit[c]; (v = p->var_num) != 0; p++)
