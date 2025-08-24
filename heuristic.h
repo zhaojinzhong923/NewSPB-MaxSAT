@@ -16,6 +16,9 @@ void SPBMaxSAT::init(vector<int> &init_solution)
             {
                 for (int c = 0; c < num_clauses; c++)
                 {
+                    // if(sat_count[c]==0){
+                        always_unsat_sc_flag[c]++;
+                    // }
                     already_in_soft_large_weight_stack[c] = 0;
                     if (org_clause_weight[c] == top_clause_weight)
                         clause_weight[c] = 1;
@@ -27,6 +30,7 @@ void SPBMaxSAT::init(vector<int> &init_solution)
             {
                 for (int c = 0; c < num_clauses; c++)
                 {
+                    always_unsat_sc_flag[c]++;
                     already_in_soft_large_weight_stack[c] = 0;
                     if (org_clause_weight[c] == top_clause_weight)
                         clause_weight[c] = 1;
@@ -60,6 +64,7 @@ void SPBMaxSAT::init(vector<int> &init_solution)
     {
         for (int c = 0; c < num_clauses; c++)
         {
+            always_unsat_sc_flag[c]++;
             already_in_soft_large_weight_stack[c] = 0;
 
             if (org_clause_weight[c] == top_clause_weight)
