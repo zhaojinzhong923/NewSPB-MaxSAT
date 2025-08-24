@@ -294,6 +294,12 @@ void SPBMaxSAT::local_search_with_decimation(char *inputfile)
                     //     }
                     //     return;
                     // }
+                    for (int c = 0; c < num_clauses; ++c) 
+                    {
+                        if (sat_count[c] > 0){
+                            always_unsat_sc_flag[c] = 0;
+                        } 
+                    }
                 }
                 if (best_soln_feasible == 0)
                 {
