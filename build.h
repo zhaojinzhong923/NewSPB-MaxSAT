@@ -311,6 +311,7 @@ void SPBMaxSAT::build_instance(char *filename)
                 problem_weighted = 1;
             total_soft_weight += org_clause_weight[c];
             soft_clause_num_index[num_sclauses++] = c;
+            if(org_clause_weight[c] > max_soft_weight) max_soft_weight = org_clause_weight[c];
         }
         else
         {

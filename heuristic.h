@@ -24,7 +24,9 @@ void SPBMaxSAT::init(vector<int> &init_solution)
                             // clause_weight[c] = 0.1 * tuned_org_clause_weight[c];
                             // clause_weight[c] = tuned_org_clause_weight[c] * int(tries / 2);
                             // clause_weight[c] = tuned_org_clause_weight[c] * double(tries / 15);
-                            clause_weight[c] = tuned_org_clause_weight[c] ;
+                            
+                            // clause_weight[c] = tuned_org_clause_weight[c] ;
+                            clause_weight[c] = (double)org_clause_weight[c]/max_soft_weight ;
                         }else{
                             clause_weight[c] = 0;
                         }
