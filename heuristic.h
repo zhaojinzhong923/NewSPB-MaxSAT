@@ -16,7 +16,7 @@ void SPBMaxSAT::init(vector<int> &init_solution)
             {
                 for (int c = 0; c < num_clauses; c++)
                 {
-                    always_unsat_clause[c]++;
+                    // always_unsat_clause[c]++;
                     already_in_soft_large_weight_stack[c] = 0;
                     if (org_clause_weight[c] == top_clause_weight)
                         clause_weight[c] = 1;
@@ -28,7 +28,7 @@ void SPBMaxSAT::init(vector<int> &init_solution)
             {
                 for (int c = 0; c < num_clauses; c++)
                 {
-                    always_unsat_clause[c]++;
+                    // always_unsat_clause[c]++;
                     already_in_soft_large_weight_stack[c] = 0;
                     if (org_clause_weight[c] == top_clause_weight)
                         clause_weight[c] = 1;
@@ -62,7 +62,7 @@ void SPBMaxSAT::init(vector<int> &init_solution)
     {
         for (int c = 0; c < num_clauses; c++)
         {
-            always_unsat_clause[c]++;
+            // always_unsat_clause[c]++;
             already_in_soft_large_weight_stack[c] = 0;
 
             if (org_clause_weight[c] == top_clause_weight)
@@ -118,6 +118,14 @@ void SPBMaxSAT::init(vector<int> &init_solution)
     /* figure out sat_count, sat_var and init unsat_stack */
     for (int c = 0; c < num_clauses; ++c)
     {
+        if(org_clause_weight[c] == top_clause_weight){
+            always_unsat_clause[c]++;
+            if(always_unsat_clause[c] > tries/3){
+                temp_converted_clause_list[temp_converted_clause_list_pointer++] = c;
+                temp_converted_clause_count++;
+                // cout << "Clause " << c << " temporarily converted to soft clause." << endl;
+            }
+        }
         sat_count[c] = 0;
         for (int j = 0; j < clause_lit_count[c]; ++j)
         {
@@ -132,6 +140,100 @@ void SPBMaxSAT::init(vector<int> &init_solution)
             unsat(c);
         }
     }
+    
+    if (temp_converted_clause_list_pointer > 0 && rand() % MY_RAND_MAX_INT * BASIC_SCALE < rdprob){
+        int c;
+        for (int i = 0; i < 15 && temp_converted_clause_list_pointer>0; i++){
+            int k = rand() % temp_converted_clause_list_pointer;
+            c = temp_converted_clause_list[k];
+            temp_converted_clause_list[k] = temp_converted_clause_list[temp_converted_clause_list_pointer--];
+            org_clause_weight[c] = (problem_weighted ? max_soft_weight : coe_soft_clause_weight);
+            clause_weight[c] = 1;
+            is_temp_converted_clause[c] = 1; // 标记该子句已被临时转换
+            already_temp_converted_clause_stack[already_temp_converted_clause_stack_fill_pointer++] = c;
+            temp_converted_clause_count++;
+            always_unsat_clause[c] = 0; // 重置该子句的未满足计数
+        }
+    }
+    
+
+
+    // if(temp_converted_clause_list > 15){
+    //     for (int i = 0; i < 15; i++){
+    //         // 新增：检查是否需要将硬子句临时转换为软子句
+    //         if (org_clause_weight[c] == top_clause_weight && always_unsat_clause[c] > tries/3)
+    //         {
+    //             // 临时转换为软子句，设置原始权值为最大软子句权重
+    //             org_clause_weight[c] = (problem_weighted ? max_soft_weight : coe_soft_clause_weight);
+    //             is_temp_converted_clause[c] = 1; // 标记该子句已被临时转换
+    //             temp_converted_clause_count++;
+    //             always_unsat_clause[c] = 0; // 重置该子句的未满足计数
+    //             // cout << "Clause " << c << " temporarily converted to soft clause." << endl;
+    //             // 跳过该子句的后续硬子句权值更新和评分更新
+    //         }
+    // }
+    // }
+    // for (int i = 0; i < 15; i++)
+    // {
+    //     // 新增：检查是否需要将硬子句临时转换为软子句
+    //     if (org_clause_weight[c] == top_clause_weight && always_unsat_clause[c] > tries/3)
+    //     {
+    //         // 临时转换为软子句，设置原始权值为最大软子句权重
+    //         org_clause_weight[c] = (problem_weighted ? max_soft_weight : coe_soft_clause_weight);
+    //         is_temp_converted_clause[c] = 1; // 标记该子句已被临时转换
+    //         temp_converted_clause_count++;
+    //         always_unsat_clause[c] = 0; // 重置该子句的未满足计数
+    //         // cout << "Clause " << c << " temporarily converted to soft clause." << endl;
+    //         // 跳过该子句的后续硬子句权值更新和评分更新
+    //     }
+    // }
+
+    // if (temp_converted_clause_list_pointer > 0)
+    // {
+    //     int max_unsat_clause;
+    //     if ((rand() % MY_RAND_MAX_INT) * BASIC_SCALE < rdprob)
+    //         break;
+
+    //     if (temp_converted_clause_list_pointer < 15)
+    //     {
+    //         max_unsat_clause = temp_converted_clause_list[0];
+
+    //         for (i = 1; i < temp_converted_clause_list_pointer; ++i)
+    //         {
+    //             // 临时转换为软子句，设置原始权值为最大软子句权重
+    //             org_clause_weight[c] = (problem_weighted ? max_soft_weight : coe_soft_clause_weight);
+    //             is_temp_converted_clause[c] = 1; // 标记该子句已被临时转换
+    //             temp_converted_clause_count++;
+    //             always_unsat_clause[c] = 0; // 重置该子句的未满足计数
+                
+    //         }
+    //     }
+    //     else
+    //     {
+    //         // best_var = goodvar_stack[rand() % goodvar_stack_fill_pointer];
+    //         max_unsat_clause = 0;
+    //         int c;
+
+    //         for (i = 1; i < 15; ++i)
+    //         {
+    //             // v = goodvar_stack[rand() % goodvar_stack_fill_pointer];
+    //             c = temp_converted_clause_list[rand() % temp_converted_clause_list_pointer];
+    //             if (max > score[best_var])
+    //             {
+    //                 best_var = v;
+    //             }
+    //             else if (score[v] == score[best_var])
+    //             {
+    //                 if (time_stamp[v] < time_stamp[best_var])
+    //                 {
+    //                     best_var = v;
+    //                 }
+    //             }
+    //         }
+    //         return best_var; // best_array[rand() % best_array_count];
+    //     }
+    
+    
 
     /*figure out score*/
     for (int v = 1; v <= num_vars; v++)
@@ -270,12 +372,17 @@ void SPBMaxSAT::local_search_with_decimation(char *inputfile)
             if (hard_unsat_nb == 0)
             {
                 local_soln_feasible = 1;
-                if (local_opt > soft_unsat_weight)
+                for(int i = 0; i < already_temp_converted_clause_stack_fill_pointer; i++){
+                    if(sat_count[already_temp_converted_clause_stack[i]] > 0){
+                        local_soln_feasible = 0;
+                    }
+                }
+                if (local_opt > soft_unsat_weight && local_soln_feasible == 1)
                 {
                     local_opt = soft_unsat_weight;
                     max_flips = step + max_non_improve_flip;
                 }
-                if (soft_unsat_weight < opt_unsat_weight)
+                if (soft_unsat_weight < opt_unsat_weight && local_soln_feasible == 1)
                 {
                     opt_time = get_runtime();
                     //cout << "o " << soft_unsat_weight << " " << total_step << " " << tries << " " << opt_time << endl;
@@ -299,7 +406,7 @@ void SPBMaxSAT::local_search_with_decimation(char *inputfile)
                             always_unsat_clause[c] = 0;
                     }
                 }
-                if (best_soln_feasible == 0)
+                if (best_soln_feasible == 0 && local_soln_feasible == 1)
                 {
                     best_soln_feasible = 1;
                     // break;
@@ -318,6 +425,12 @@ void SPBMaxSAT::local_search_with_decimation(char *inputfile)
             flip(flipvar);
             time_stamp[flipvar] = step;
             total_step++;
+        }
+            for (int c = 0; c < 15; ++c)
+        {
+            org_clause_weight[c] = top_clause_weight; // 恢复为硬子句初始权值
+            is_temp_converted_clause[c] = 0; // 重置标记
+            already_temp_converted_clause_stack_fill_pointer = 0;
         }
     }
 }
@@ -518,10 +631,23 @@ void SPBMaxSAT::soft_increase_weights_not_partial()
 
 void SPBMaxSAT::update_clause_weights()
 {
+    // //新增：将之前临时转换为软子句的硬子句，在下一轮中若得到满足则转换回硬子句
+    // for (int c = 0; c < already_temp_converted_clause_stack_fill_pointer; ++c)
+    // {
+    //     if ( sat_count[c] > 0)
+    //     {
+    //         org_clause_weight[c] = top_clause_weight; // 恢复为硬子句初始权值
+    //         is_temp_converted_clause[c] = 0; // 重置标记
+    //         temp_converted_clause_count--;
+
+    //         // clause_weight[c] = 1; // 恢复为硬子句权值
+    //         // temp_converted_clause_list[c] = -1; // 清除记录
+    //     }
+    // }
+    
     if (num_hclauses > 0)
     {
         hard_increase_weights();
-
         if (soft_unsat_weight >= opt_unsat_weight){ //The SPB constraint is falsified
             soft_increase_weights();                //update w(SPB)
         }    

@@ -106,6 +106,8 @@ void SPBMaxSAT::settings()
     large_clause_count_threshold = 0;
     soft_large_clause_count_threshold = 0;
 
+    temp_converted_clause_count=0;
+
     if (1 == problem_weighted) // Weighted Partial MaxSAT
     {
         coe_soft_clause_weight = 3000;
@@ -393,6 +395,10 @@ void SPBMaxSAT::build_instance(char *filename)
     for (c = 0; c < num_clauses; ++c)
     {
         always_unsat_clause[c] = 0;
+        temp_converted_clause_list[c] = -1;
+        if(org_clause_weight[c] == top_clause_weight){
+            is_temp_converted_clause[c] = -1;
+        }
         for (int i = 0; i < clause_lit_count[c]; ++i)
         {
             v = clause_lit[c][i].var_num;
@@ -412,6 +418,7 @@ void SPBMaxSAT::allocate_memory()
 {
     int malloc_var_length = num_vars + 10;
     int malloc_clause_length = num_clauses + 10;
+    int malloc_hclause_length = num_hclauses + 10;
 
     unit_clause = new lit[malloc_clause_length];
 
@@ -463,6 +470,10 @@ void SPBMaxSAT::allocate_memory()
     soft_clause_num_index = new int[malloc_clause_length];
 
     always_unsat_clause = new int[malloc_clause_length];
+    temp_converted_clause_list = new int[malloc_hclause_length];
+    is_temp_converted_clause = new int[malloc_hclause_length];
+    already_temp_converted_clause_stack = new int[malloc_hclause_length];
+    already_temp_converted_clause_stack_fill_pointer = 0;
 }
 
 void SPBMaxSAT::free_memory()
@@ -523,6 +534,9 @@ void SPBMaxSAT::free_memory()
 
     delete[] soft_clause_num_index;
     delete[] always_unsat_clause;
+    delete[] temp_converted_clause_list;
+    delete[] is_temp_converted_clause;
+    delete[] already_temp_converted_clause_stack;
 }
 
 #endif

@@ -171,6 +171,12 @@ class SPBMaxSAT
 	//long long *soft_clause_weight_upper_bound;
 
 	int *always_unsat_clause;
+	int *temp_converted_clause_list; // 用于记录临时转换为软子句的硬子句列表
+	int temp_converted_clause_list_pointer;
+	int *is_temp_converted_clause;   // 数组用于记录某个子句是否临时转换为软子句（1：已转换；-1：未转换）
+	int temp_converted_clause_count;
+	int *already_temp_converted_clause_stack;
+	int already_temp_converted_clause_stack_fill_pointer;
 
 	//function used in algorithm
 	void build_neighbor_relation();
