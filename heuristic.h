@@ -120,7 +120,7 @@ void SPBMaxSAT::init(vector<int> &init_solution)
     {
         if(org_clause_weight[c] == top_clause_weight){
             always_unsat_clause[c]++;
-            if(always_unsat_clause[c] > tries/3 && tries > 5){
+            if(always_unsat_clause[c] > tries/3 && best_soln_feasible == 1){
                 temp_converted_clause_list[temp_converted_clause_list_pointer++] = c;
                 temp_converted_clause_count++;
                 // cout << "Clause " << c << " temporarily converted to soft clause." << endl;
@@ -143,7 +143,7 @@ void SPBMaxSAT::init(vector<int> &init_solution)
     
     if (temp_converted_clause_list_pointer > 0 && rand() % MY_RAND_MAX_INT * BASIC_SCALE < rdprob){
         int c;
-        for (int i = 0; i < 15 && temp_converted_clause_list_pointer>0; i++){
+        for (int i = 0; i < 5 && temp_converted_clause_list_pointer>0; i++){
             int k = rand() % temp_converted_clause_list_pointer;
             c = temp_converted_clause_list[k];
             temp_converted_clause_list[k] = temp_converted_clause_list[temp_converted_clause_list_pointer--];
@@ -431,12 +431,13 @@ void SPBMaxSAT::local_search_with_decimation(char *inputfile)
             if ( sat_count[c] > 0 )
                 always_unsat_clause[c] = 0;
         }
-        for (int c = 0; c < 15; ++c)
+        for (; already_temp_converted_clause_stack_fill_pointer>0; already_temp_converted_clause_stack_fill_pointer--)
         {
+            int c = already_temp_converted_clause_stack[already_temp_converted_clause_stack_fill_pointer-1];
             org_clause_weight[c] = top_clause_weight; // 恢复为硬子句初始权值
             is_temp_converted_clause[c] = 0; // 重置标记
-            already_temp_converted_clause_stack_fill_pointer = 0;
         }
+        already_temp_converted_clause_stack_fill_pointer = 0;
         temp_converted_clause_list_pointer = 0;
     }
 }
