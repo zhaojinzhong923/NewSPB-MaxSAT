@@ -297,7 +297,7 @@ void SPBMaxSAT::local_search_with_decimation(char *inputfile)
                     for (int c = 0; c < num_clauses; ++c) 
                     {
                         if(org_clause_weight[c] == top_clause_weight){
-                            if ((sat_count[c] > 0) && (always_unsat_sc_flag[c] == 1)){
+                            if ((sat_count[c] > 0) && (always_unsat_sc_count[c] == 1)){
                                 always_unsat_sc_count[c] = 0;
                             }
                         }
