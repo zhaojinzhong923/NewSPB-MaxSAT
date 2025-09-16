@@ -250,12 +250,14 @@ int SPBMaxSAT::pick_var()
                     if (org_clause_weight[c] > org_clause_weight[sel_c])
                         sel_c = c;
                 }
-                if (clause_lit_count[sel_c] != 0)
-                    break;
+                // if (clause_lit_count[sel_c] != 0)
+                //     break;
             }
             // }else{
             //     sel_c = softunsat_stack[rand() % softunsat_stack_fill_pointer];
             // }
+            if (clause_lit_count[sel_c] != 0)
+                break;
         }
     }
     if ((rand() % MY_RAND_MAX_INT) * BASIC_SCALE < rwprob)
