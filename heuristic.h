@@ -115,10 +115,10 @@ void SPBMaxSAT::init(vector<int> &init_solution)
     /* figure out sat_count, sat_var and init unsat_stack */
     for (int c = 0; c < num_clauses; ++c)
     {
-        if(org_clause_weight[c] == top_clause_weight){
-            always_unsat_sc_count[c]++;
-        }
-            
+        // if(org_clause_weight[c] == top_clause_weight){
+        //     always_unsat_sc_count[c]++;
+        // }
+        always_unsat_sc_count[c]++; 
 
         sat_count[c] = 0;
         for (int j = 0; j < clause_lit_count[c]; ++j)
@@ -243,19 +243,26 @@ int SPBMaxSAT::pick_var()
             sel_c = softunsat_stack[rand() % softunsat_stack_fill_pointer];
             // if (clause_lit_count[sel_c] != 0)
             //     break;
-            if((softunsat_stack_fill_pointer > 10) && ((rand() % MY_RAND_MAX_INT) * BASIC_SCALE < 0.5) && (problem_weighted==1) ){
+            // if((softunsat_stack_fill_pointer > 10) && ((rand() % MY_RAND_MAX_INT) * BASIC_SCALE < 0.5) && (problem_weighted==1) ){
+            //     for (i = 0; i < 10; ++i)
+            //     {
+            //         c = softunsat_stack[rand() % softunsat_stack_fill_pointer];
+            //         if (org_clause_weight[c] > org_clause_weight[sel_c])
+            //             sel_c = c;
+            //     }
+            //     if (clause_lit_count[sel_c] != 0)
+            //         break;
+            // }
+            if((softunsat_stack_fill_pointer > 10) && ((rand() % MY_RAND_MAX_INT) * BASIC_SCALE < 0.5) ){
                 for (i = 0; i < 10; ++i)
                 {
                     c = softunsat_stack[rand() % softunsat_stack_fill_pointer];
-                    if (org_clause_weight[c] > org_clause_weight[sel_c])
+                    if (always_unsat_sc_count[c] > always_unsat_sc_count[sel_c])
                         sel_c = c;
                 }
                 if (clause_lit_count[sel_c] != 0)
                     break;
             }
-            // }else{
-            //     sel_c = softunsat_stack[rand() % softunsat_stack_fill_pointer];
-            // }
         }
     }
     if ((rand() % MY_RAND_MAX_INT) * BASIC_SCALE < rwprob)
@@ -342,10 +349,13 @@ void SPBMaxSAT::local_search_with_decimation(char *inputfile)
         }
         for (int c = 0; c < num_clauses; ++c) 
         {
-            if(org_clause_weight[c] == top_clause_weight){
-                if ((sat_count[c] > 0)){
-                    always_unsat_sc_count[c] = 0;
-                }
+            // if(org_clause_weight[c] == top_clause_weight){
+            //     if ((sat_count[c] > 0)){
+            //         always_unsat_sc_count[c] = 0;
+            //     }
+            // }
+            if ((sat_count[c] > 0)){
+                always_unsat_sc_count[c] = 0;
             }
         }
     }
