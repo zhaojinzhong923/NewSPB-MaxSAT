@@ -257,7 +257,7 @@ int SPBMaxSAT::pick_var()
                 for (i = 0; i < 10; ++i)
                 {
                     c = softunsat_stack[rand() % softunsat_stack_fill_pointer];
-                    if (always_unsat_sc_count[c] > always_unsat_sc_count[sel_c])
+                    if (always_unsat_sc_count[c] < always_unsat_sc_count[sel_c])
                         sel_c = c;
                 }
                 if (clause_lit_count[sel_c] != 0)
