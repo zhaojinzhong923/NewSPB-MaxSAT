@@ -386,6 +386,18 @@ void Decimation::sunit_propagation()
 
 void Decimation::random_propagation()
 {
+    if((rand() % MY_RAND_MAX_INT) * BASIC_SCALE < 0.5 && unassigned_var_count > 1){
+        int v1, v2, sense1, sense2;
+        v1 = unassigned_var[rand() % unassigned_var_count];
+        do{
+            v2 = unassigned_var[rand() % unassigned_var_count];
+        }while(v1 == v2);
+        sense1 = choose_sense(v1);
+        sense2 = choose_sense(v2);
+        assign(v1, sense1);
+        assign(v2, sense2);
+        return;
+    }
     int v, sense;
     v = unassigned_var[rand() % unassigned_var_count];
     sense = rand() % 2;
