@@ -391,21 +391,35 @@ void Decimation::random_propagation(hist_hardunsat_stack,hist_hardunsat_stack_fi
     // v = unassigned_var[rand() % unassigned_var_count];
     // sense = rand() % 2;
     // assign(v, sense);
-    if((rand() % MY_RAND_MAX_INT) * BASIC_SCALE < 0.5){
+    // if((rand() % MY_RAND_MAX_INT) * BASIC_SCALE < 0.5 || unassigned_var_count < num_vars/2){
+    //     int v, sense;
+    //     v = unassigned_var[rand() % unassigned_var_count];
+    //     sense = rand() % 2;
+    //     assign(v, sense);
+    // }else{
+    if((rand() % MY_RAND_MAX_INT) * BASIC_SCALE < 0.5 || unassigned_var_count > num_vars/2){    
+        for(int i =0;i<15;++i){
+            int v, c, sense, rd;
+            c = hist_hardunsat_stack[rand() % hist_hardunsat_stack_fill_pointer];
+            for(int j=0;j<clause_lit_count[c];++j){
+                v = clause_lit[c][j].var_num;
+                // if(fix[v]==-1){
+                //     sense = rand() % 2;
+                //     assign(v, sense);
+                //     break;
+                // }
+                if(unassigned_var[v] != -1){
+                    sense = clause_lit[c][j].sense;
+                    assign(v, sense);
+                    return;
+                }
+            }
+        }
+    }else{
         int v, sense;
         v = unassigned_var[rand() % unassigned_var_count];
         sense = rand() % 2;
         assign(v, sense);
-    }else{
-        for(int i =0;i<15;++i){
-            // if(unassigned_var_count==0)
-            //     break;
-            // int v, sense;
-            // v = unassigned_var[rand() % unassigned_var_count];
-            // sense = rand() % 2;
-            // assign(v, sense);
-            if()
-        }
     }
 
 }
