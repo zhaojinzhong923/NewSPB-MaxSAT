@@ -397,7 +397,7 @@ void Decimation::random_propagation(hist_hardunsat_stack,hist_hardunsat_stack_fi
     //     sense = rand() % 2;
     //     assign(v, sense);
     // }else{
-    if((rand() % MY_RAND_MAX_INT) * BASIC_SCALE < 0.5 || unassigned_var_count > num_vars/2){    
+    if((rand() % MY_RAND_MAX_INT) * BASIC_SCALE < 0.5 && unassigned_var_count > num_vars/2){    
         for(int i =0;i<15;++i){
             int v, c, sense, rd;
             c = hist_hardunsat_stack[rand() % hist_hardunsat_stack_fill_pointer];
