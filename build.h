@@ -439,6 +439,11 @@ void SPBMaxSAT::allocate_memory()
     softunsat_stack = new int[malloc_clause_length];
     index_in_softunsat_stack = new int[malloc_clause_length];
 
+    hist_hardunsat_stack = new int[malloc_clause_length];
+    index_in_hist_hardunsat_stack = new int[malloc_clause_length];
+    hist_softunsat_stack = new int[malloc_clause_length];
+    index_in_hist_softunsat_stack = new int[malloc_clause_length];
+
     // soft_clause_weight_upper_bound = new long long[malloc_clause_length];
 
     unsatvar_stack = new int[malloc_var_length];
@@ -498,6 +503,11 @@ void SPBMaxSAT::free_memory()
     delete[] index_in_hardunsat_stack;
     delete[] softunsat_stack;
     delete[] index_in_softunsat_stack;
+
+    delete[] hist_hardunsat_stack;
+    delete[] index_in_hist_hardunsat_stack;
+    delete[] hist_softunsat_stack;
+    delete[] index_in_hist_softunsat_stack;
 
     delete[] unsatvar_stack;
     delete[] index_in_unsatvar_stack;

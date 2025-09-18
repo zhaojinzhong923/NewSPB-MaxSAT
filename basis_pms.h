@@ -116,6 +116,15 @@ class SPBMaxSAT
 	int *index_in_softunsat_stack; //which position is a clause in the unsat_stack
 	int softunsat_stack_fill_pointer;
 
+	//unsat clauses stack
+	int *hist_hardunsat_stack;		   //store the unsat clause number
+	int *index_in_hist_hardunsat_stack; //which position is a clause in the unsat_stack
+	int hist_hardunsat_stack_fill_pointer;
+
+	int *hist_softunsat_stack;		   //store the unsat clause number
+	int *index_in_hist_softunsat_stack; //which position is a clause in the unsat_stack
+	int hist_softunsat_stack_fill_pointer;
+
 	//variables in unsat clauses
 	int *unsatvar_stack;
 	int unsatvar_stack_fill_pointer;

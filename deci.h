@@ -386,10 +386,19 @@ void Decimation::sunit_propagation()
 
 void Decimation::random_propagation()
 {
-    int v, sense;
-    v = unassigned_var[rand() % unassigned_var_count];
-    sense = rand() % 2;
-    assign(v, sense);
+    // int v, sense;
+    // v = unassigned_var[rand() % unassigned_var_count];
+    // sense = rand() % 2;
+    // assign(v, sense);
+    if((rand() % MY_RAND_MAX_INT) * BASIC_SCALE < 0.5){
+        int v, sense;
+        v = unassigned_var[rand() % unassigned_var_count];
+        sense = rand() % 2;
+        assign(v, sense);
+    }else{
+        
+    }
+
 }
 
 void Decimation::unit_prosess()

@@ -310,6 +310,26 @@ void SPBMaxSAT::local_search_with_decimation(char *inputfile)
             time_stamp[flipvar] = step;
             total_step++;
         }
+        // for (int c = 0; c < num_clauses; ++c) 
+        // {
+            
+        //     if ((sat_count[c] > 0)){
+        //         always_unsat_sc_count[c] = 0;
+        //     }
+            
+        // }
+        if(hard_unsat_nb>0){
+            hist_hardunsat_stack_fill_pointer = 0;
+            for (i = 0; i < hardunsat_stack_fill_pointer; ++i){
+                c = hardunsat_stack[i];
+                hist_hardunsat_stack[hist_hardunsat_stack_fill_pointer++] = c;
+            }
+        }       
+        hist_softunsat_stack_fill_pointer = 0;
+        for (i = 0; i < softunsat_stack_fill_pointer; ++i){
+            c = softunsat_stack[i];
+            hist_softunsat_stack[hist_softunsat_stack_fill_pointer++] = c;
+        }
     }
 }
 
