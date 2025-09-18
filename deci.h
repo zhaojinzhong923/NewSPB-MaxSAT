@@ -18,7 +18,7 @@ class Decimation
     void remove_unassigned_var(int v);
     void hunit_propagation();
     void sunit_propagation();
-    void random_propagation();
+    void random_propagation(int *hist_hardunsat_stack, int &hist_hardunsat_stack_fill_pointer, int *hist_softunsat_stack, int &hist_softunsat_stack_fill_pointer);
     void unit_prosess(int *hist_hardunsat_stack, int &hist_hardunsat_stack_fill_pointer, int *hist_softunsat_stack, int &hist_softunsat_stack_fill_pointer);
     bool choose_sense(int v);
 
