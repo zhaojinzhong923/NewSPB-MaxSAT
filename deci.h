@@ -420,6 +420,7 @@ void Decimation::random_propagation(hist_hardunsat_stack,hist_hardunsat_stack_fi
         v = unassigned_var[rand() % unassigned_var_count];
         sense = rand() % 2;
         assign(v, sense);
+        return;
     }
 
 }
