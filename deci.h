@@ -19,7 +19,7 @@ class Decimation
     void hunit_propagation();
     void sunit_propagation();
     void random_propagation();
-    void unit_prosess();
+    void unit_prosess(int *hist_hardunsat_stack, int &hist_hardunsat_stack_fill_pointer, int *hist_softunsat_stack, int &hist_softunsat_stack_fill_pointer);
     bool choose_sense(int v);
 
     vector<int> fix;
@@ -238,6 +238,7 @@ void Decimation::remove_unassigned_var(int v)
     int last_var = unassigned_var[--unassigned_var_count];
     unassigned_var[index] = last_var;
     index_in_unassigned_var[last_var] = index;
+    index_in_unassigned_var[v] = -1;
 }
 
 void Decimation::assign(int v, int sense)
@@ -384,7 +385,7 @@ void Decimation::sunit_propagation()
     assign(v, sense);
 }
 
-void Decimation::random_propagation()
+void Decimation::random_propagation(hist_hardunsat_stack,hist_hardunsat_stack_fill_pointer,hist_softunsat_stack,hist_softunsat_stack_fill_pointer)
 {
     // int v, sense;
     // v = unassigned_var[rand() % unassigned_var_count];
@@ -396,12 +397,20 @@ void Decimation::random_propagation()
         sense = rand() % 2;
         assign(v, sense);
     }else{
-        
+        for(int i =0;i<15;++i){
+            // if(unassigned_var_count==0)
+            //     break;
+            // int v, sense;
+            // v = unassigned_var[rand() % unassigned_var_count];
+            // sense = rand() % 2;
+            // assign(v, sense);
+            if()
+        }
     }
 
 }
 
-void Decimation::unit_prosess()
+void Decimation::unit_prosess(hist_hardunsat_stack,hist_hardunsat_stack_fill_pointer,hist_softunsat_stack,hist_softunsat_stack_fill_pointer)
 {
 
     while (unassigned_var_count > 0)
@@ -416,7 +425,7 @@ void Decimation::unit_prosess()
         }
         else
         {
-            random_propagation();
+            random_propagation(hist_hardunsat_stack,hist_hardunsat_stack_fill_pointer,hist_softunsat_stack,hist_softunsat_stack_fill_pointer);
         }
     }
 }

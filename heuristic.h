@@ -257,7 +257,7 @@ void SPBMaxSAT::local_search_with_decimation(char *inputfile)
     for (tries = 1; tries < max_tries; ++tries)
     {
         deci.init(local_opt_soln, best_soln, unit_clause, unit_clause_count, clause_lit_count);
-        deci.unit_prosess();
+        deci.unit_prosess(hist_hardunsat_stack,hist_hardunsat_stack_fill_pointer,hist_softunsat_stack,hist_softunsat_stack_fill_pointer);
         init(deci.fix);
 
         long long local_opt = __LONG_LONG_MAX__;
@@ -324,13 +324,18 @@ void SPBMaxSAT::local_search_with_decimation(char *inputfile)
                 c = hardunsat_stack[i];
                 hist_hardunsat_stack[hist_hardunsat_stack_fill_pointer++] = c;
             }
-        }       
+        }else{
+            hist_hardunsat_stack_fill_pointer = 0;
+        }
+        if(soft_unsat_weight>0){    
         hist_softunsat_stack_fill_pointer = 0;
         for (i = 0; i < softunsat_stack_fill_pointer; ++i){
             c = softunsat_stack[i];
             hist_softunsat_stack[hist_softunsat_stack_fill_pointer++] = c;
         }
-    }
+        }else{
+            hist_softunsat_stack_fill_pointer = 0;
+        }
 }
 
 void SPBMaxSAT::hard_increase_weights(){
