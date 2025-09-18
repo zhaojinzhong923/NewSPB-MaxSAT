@@ -424,7 +424,7 @@ void Decimation::random_propagation(hist_hardunsat_stack,hist_hardunsat_stack_fi
 
 }
 
-void Decimation::unit_prosess(hist_hardunsat_stack,hist_hardunsat_stack_fill_pointer,hist_softunsat_stack,hist_softunsat_stack_fill_pointer)
+void Decimation::unit_prosess(int *hist_hardunsat_stack, int &hist_hardunsat_stack_fill_pointer, int *hist_softunsat_stack, int &hist_softunsat_stack_fill_pointer)
 {
 
     while (unassigned_var_count > 0)
