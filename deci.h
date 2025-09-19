@@ -387,7 +387,7 @@ void Decimation::sunit_propagation()
 void Decimation::random_propagation()
 {
     if((rand() % MY_RAND_MAX_INT) * BASIC_SCALE < 0.5 && unassigned_var_count > 15){
-        int sel_v, v1, sel_v_lit_count, v1_lit_count, sense;
+        int sel_v, v1, sense;
         sel_v = unassigned_var[rand() % unassigned_var_count];
         // do{
         //     v2 = unassigned_var[rand() % unassigned_var_count];
@@ -397,10 +397,10 @@ void Decimation::random_propagation()
         // assign(v1, sense1);
         // assign(v2, sense2);
         for(int i = 0; i < 15; ++i){
-            v1_lit_count = unassigned_var[rand() % unassigned_var_count];
-            if(v1_lit_count > sel_v_lit_count){
-                sel_v = v1_lit_count;
-                sel_v_lit_count = v1_lit_count;
+            v1 = unassigned_var[rand() % unassigned_var_count];
+            if(var_lit_count[v] > var_lit_count[sel_v]){
+                sel_v = v1;
+                // sel_v_lit_count = v1_lit_count;
             }
         }
         sense = choose_sense(sel_v);
