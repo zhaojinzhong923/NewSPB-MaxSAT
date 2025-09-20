@@ -403,10 +403,25 @@ void Decimation::sunit_propagation()
 
 void Decimation::random_propagation()
 {
-    int v, sense;
-    v = unassigned_var[rand() % unassigned_var_count];
-    sense = rand() % 2;
-    assign(v, sense);
+    if((rand() % MY_RAND_MAX_INT) * BASIC_SCALE < 0.5 && unassigned_var_count > 15){
+        int sel_v, v1, sense;
+        sel_v = unassigned_var[rand() % unassigned_var_count];
+        for(int i = 0; i < 15; ++i){
+            v1 = unassigned_var[rand() % unassigned_var_count];
+            if(var_lit_count[v] > var_lit_count[sel_v]){
+                sel_v = v1;
+                // sel_v_lit_count = v1_lit_count;
+            }
+        }
+        sense = choose_sense(sel_v);
+        assign(sel_v, sense);
+        return;
+    }else{
+        int v, sense;
+        v = unassigned_var[rand() % unassigned_var_count];
+        sense = rand() % 2;
+        assign(v, sense);
+    }
 }
 
 // void Decimation::unit_prosess()
