@@ -115,6 +115,11 @@ void SPBMaxSAT::init(vector<int> &init_solution)
     /* figure out sat_count, sat_var and init unsat_stack */
     for (int c = 0; c < num_clauses; ++c)
     {
+        if(org_clause_weight[c] == top_clause_weight){
+            always_unsat_sc_count[c]++;
+        }
+            
+
         sat_count[c] = 0;
         for (int j = 0; j < clause_lit_count[c]; ++j)
         {
@@ -160,7 +165,7 @@ void SPBMaxSAT::init(vector<int> &init_solution)
 
 int SPBMaxSAT::pick_var()
 {
-    int i, v;
+    int i, v, c;
     int best_var;
     int sel_c;
     lit *p;
@@ -220,11 +225,37 @@ int SPBMaxSAT::pick_var()
     if (hardunsat_stack_fill_pointer > 0)
     {
         sel_c = hardunsat_stack[rand() % hardunsat_stack_fill_pointer];
+        if((hardunsat_stack_fill_pointer > 10) && ((rand() % MY_RAND_MAX_INT) * BASIC_SCALE < 0.5) ){
+            for (i = 0; i < 10; ++i)
+            {
+                c = hardunsat_stack[rand() % hardunsat_stack_fill_pointer];
+                if (always_unsat_sc_count[c] > always_unsat_sc_count[sel_c])
+                    sel_c = c;
+            }
+        }
+        // }else{
+        //     sel_c = hardunsat_stack[rand() % hardunsat_stack_fill_pointer];
+        // }
     }
     else
     {
         while(1){
             sel_c = softunsat_stack[rand() % softunsat_stack_fill_pointer];
+            // if (clause_lit_count[sel_c] != 0)
+            //     break;
+            if((softunsat_stack_fill_pointer > 10) && ((rand() % MY_RAND_MAX_INT) * BASIC_SCALE < 0.5) && (problem_weighted==1) ){
+                for (i = 0; i < 10; ++i)
+                {
+                    c = softunsat_stack[rand() % softunsat_stack_fill_pointer];
+                    if (org_clause_weight[c] > org_clause_weight[sel_c])
+                        sel_c = c;
+                }
+                // if (clause_lit_count[sel_c] != 0)
+                //     break;
+            }
+            // }else{
+            //     sel_c = softunsat_stack[rand() % softunsat_stack_fill_pointer];
+            // }
             if (clause_lit_count[sel_c] != 0)
                 break;
         }
@@ -289,6 +320,7 @@ void SPBMaxSAT::local_search_with_decimation(char *inputfile)
                     //     }
                     //     return;
                     // }
+                    
                 }
                 if (best_soln_feasible == 0)
                 {
@@ -309,6 +341,14 @@ void SPBMaxSAT::local_search_with_decimation(char *inputfile)
             flip(flipvar);
             time_stamp[flipvar] = step;
             total_step++;
+        }
+        for (int c = 0; c < num_clauses; ++c) 
+        {
+            if(org_clause_weight[c] == top_clause_weight){
+                if ((sat_count[c] > 0)){
+                    always_unsat_sc_count[c] = 0;
+                }
+            }
         }
     }
 }
